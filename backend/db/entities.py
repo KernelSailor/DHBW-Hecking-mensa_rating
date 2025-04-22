@@ -1,5 +1,5 @@
 from typing import List
-from sqlalchemy import CheckConstraint, String, Boolean, Integer, Text, ForeignKey
+from sqlalchemy import CheckConstraint, DateTime, String, Boolean, Integer, Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.orm import DeclarativeBase
 
@@ -10,6 +10,7 @@ class User(Base):
     __tablename__ = "user"
     email: Mapped[str] = mapped_column(CheckConstraint("email LIKE '%@%'"), primary_key=True)
     name: Mapped[str] = mapped_column(String(30))
+    password: Mapped[str]
     ratings: Mapped[List["Rating"]] = relationship(back_populates="user_obj")
     suggestions: Mapped[List["Suggestion"]] = relationship(back_populates="user_obj")
 
@@ -38,10 +39,18 @@ class Rating(Base):
     def __repr__(self) -> str:
         return f"Rating(timestamp={self.timestamp!r}, user_email={self.user_email!r}, stars={self.stars!r})"
 
+class MenuItem(Base):
+    __tablename__ = "menu_item"
+    date: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(ForeignKey("dish.id"), primary_key=True)
+
+    def __repr__(self) -> str:
+        return f"Menu Item(date={self.date!r}, name={self.name!r})"
+    
 class Suggestion(Base):
     __tablename__ = "suggestion"
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String(50))
+    id: Mapped[DateTime] = mapped_column(DateTime, primary_key=True)
+    dish: Mapped[int] = mapped_column(String(50))
     description: Mapped[str] = mapped_column(Text, nullable=True)
     timestamp: Mapped[str] = mapped_column(String(50))
     user_email: Mapped[str] = mapped_column(ForeignKey("user.email"))
@@ -49,4 +58,12 @@ class Suggestion(Base):
 
     def __repr__(self) -> str:
         return f"Suggestion(id={self.id!r}, name={self.name!r})"
+    
+class user_votes(Base):
+    __tablename__ = "user_votes"
+    user: Mapped[int] = mapped_column(ForeignKey("user.email"), primary_key=True)
+    suggestion: Mapped[str] = mapped_column(ForeignKey("suggestion.id"), primary_key=True)
+
+    def __repr__(self) -> str:
+        return f"Menu Item(date={self.date!r}, name={self.name!r})"
 
