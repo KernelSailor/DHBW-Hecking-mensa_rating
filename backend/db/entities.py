@@ -1,5 +1,5 @@
 from typing import List
-from sqlalchemy import String
+from sqlalchemy import CheckConstraint, String
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import ForeignKey
@@ -11,7 +11,7 @@ class Base(DeclarativeBase):
 
 class User(Base):
     __tablename__ = "user"
-    email: Mapped[str] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(CheckConstraint("email LIKE '%@%'"), primary_key=True)
     name: Mapped[str] = mapped_column(String(30))
     ratings: Mapped[List["Rating"]] = relationship(back_populates="user_obj")
 
