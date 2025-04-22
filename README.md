@@ -5,4 +5,4 @@
 ``pip install -r requirements.txt`` 
 
 ## Database schema
-![er-model](ER-models/er_final.png.png)
+![er-model](ER-models/er_final.png)
