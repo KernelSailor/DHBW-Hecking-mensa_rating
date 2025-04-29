@@ -23,11 +23,6 @@ class UserDAO(DAO):
             stmt = select(User).where(User.email == email)
             user = session.scalars(stmt).one()
 
-            if user:
-                print(user)
-            else:
-                print(f'user with email {email} not found')
-
             return user
         
     def insert_suggestion(self, email, description):
